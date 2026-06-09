@@ -9,3 +9,4 @@
   </tr>
 %end
 </table>
+<p><a href="/new">Add a new task</a></p>

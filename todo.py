@@ -1,4 +1,4 @@
-from bottle import Bottle, template
+from bottle import Bottle, template, request
 import sqlite3
 app = Bottle()
 
