@@ -6,7 +6,7 @@ app = Bottle()
 def index():
     return 'Hello from Bottle'
 
-@app.route('/todo')
+@app.get('/todo')
 def todo_list():
     show  = request.query.show or 'open'
     match show:
@@ -23,8 +23,9 @@ def todo_list():
         cursor = connection.cursor()
         cursor.execute("SELECT id, task, status FROM todo WHERE status LIKE '1'")
         result = cursor.fetchall()
-    output = template('show_tasks', rows=result)
-    return str(result)
+    output = template('show_tasks.tpl', rows=result)
+    return output
+    
 
 
 if __name__ == '__main__':
