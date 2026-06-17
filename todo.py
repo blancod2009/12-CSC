@@ -26,6 +26,56 @@ def todo_list():
     output = template('show_tasks.tpl', rows=result)
     return output
     
+@app.route('/new', method=['GET', 'POST'])
+def new_task():
+    if request.POST:
+        #The code here is only executed if POST data, e.g. from a
+        #HTML form, is inside the request.
+        new_task = request.forms.task.strip()
+        with sqlite3.connect('todo.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("INSERT INTO todo (task,status) VALUES (?,?)", (new_task, 1))
+            new_id = cursor.lastrowid
+        return template('message.tpl',
+            message=f'The new task was inserted into the database, the ID is {new_id}')
+    else:
+        #the code here is only executed if no POST data was received.
+        return template('new_task.tpl')
+    
+
+@app.route('/edit/<number:int>', method=['GET', 'POST'])
+def edit_task(number):
+    if request.POST:
+        new_data = request.forms.task.strip()
+        status = request.forms.status.strip()
+        if status == 'open':
+            status = 1
+        else:
+            status = 0
+        with sqlite3.connect('todo.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("UPDATE todo SET task = ?, status = ? WHERE id LIKE ?", (new_data, status, number))
+        return template('message.tpl',
+            message=f'The task number {number} was successfully updated')
+    else:
+        with sqlite3.connect('todo.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT task FROM todo WHERE id LIKE ?", (number,))
+            current_data = cursor.fetchone()
+        return template('edit_task', current_data=current_data, number=number)
+
+
+
+@app.route('/as_json/<number:re:[0-9]+>')
+def task_as_json(number):
+    with sqlite3.connect('todo.db') as connection:
+        cursor = connection.cursor()
+        cursor.execute("SELECT id, task, status FROM todo WHERE id LIKE ?", (number,))
+        result = cursor.fetchone()
+    if not result:
+        return {'task': 'This task ID number does not exist!'}
+    else:
+        return {'id': result[0], 'task': result[1], 'status': result[2]}
 
 
 if __name__ == '__main__':
