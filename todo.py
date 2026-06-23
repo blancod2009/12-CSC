@@ -1,6 +1,9 @@
-from bottle import Bottle, template, request
+from bottle import Bottle, template, request, static_file
+from pathlib import Path
 import sqlite3
 app = Bottle()
+ABSOLUTE_APPLICATION_PATH = Path(__file__).parents[0]
+
 
 @app.route('/')
 def index():
@@ -76,6 +79,14 @@ def task_as_json(number):
         return {'task': 'This task ID number does not exist!'}
     else:
         return {'id': result[0], 'task': result[1], 'status': result[2]}
+    
+
+
+@app.route('/static/<filepath:path>')
+def send_static_file(filepath):
+    ROOT_PATH = ABSOLUTE_APPLICATION_PATH / 'static'
+    return static_file(filepath,
+                    root=ROOT_PATH)
 
 
 if __name__ == '__main__':
