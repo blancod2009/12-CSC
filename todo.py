@@ -1,4 +1,4 @@
-from bottle import Bottle, template, request, static_file
+from bottle import Bottle, template, request, static_file, redirect
 from pathlib import Path
 import sqlite3
 app = Bottle()
@@ -8,6 +8,7 @@ ABSOLUTE_APPLICATION_PATH = Path(__file__).parents[0]
 @app.route('/')
 def index():
     return 'Hello from Bottle'
+    redirect('/todo')
 
 @app.get('/todo')
 def todo_list():
@@ -87,6 +88,10 @@ def send_static_file(filepath):
     ROOT_PATH = ABSOLUTE_APPLICATION_PATH / 'static'
     return static_file(filepath,
                     root=ROOT_PATH)
+
+@app.error(404)
+def error_404(error):
+    return 'Sorry, this page does not exist!'
 
 
 if __name__ == '__main__':
