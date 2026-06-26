@@ -7,7 +7,7 @@ ABSOLUTE_APPLICATION_PATH = Path(__file__).parents[0]
 
 @app.route('/')
 def index():
-    return 'Hello from Bottle'
+    return 'Hello from Lalith'
     redirect('/todo')
 
 @app.get('/todo')
@@ -33,8 +33,6 @@ def todo_list():
 @app.route('/new', method=['GET', 'POST'])
 def new_task():
     if request.POST:
-        #The code here is only executed if POST data, e.g. from a
-        #HTML form, is inside the request.
         new_task = request.forms.task.strip()
         with sqlite3.connect('todo.db') as connection:
             cursor = connection.cursor()
@@ -67,6 +65,23 @@ def edit_task(number):
             cursor.execute("SELECT task FROM todo WHERE id LIKE ?", (number,))
             current_data = cursor.fetchone()
         return template('edit_task', current_data=current_data, number=number)
+
+
+
+@app.route('/details/<task:re:[0-9]+>')
+def show_item(task):
+        with sqlite3.connect('todo.db') as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT task, status FROM todo WHERE id LIKE ?", (task,))
+            result = cursor.fetchone()
+        if not result:
+            return template('message.tpl',
+            message = f'The task number {task} does not exist!')
+        else:
+            return template('message.tpl',
+            message = f'Task: {result[0]}, status: {result[1]}')
+
+
 
 
 
