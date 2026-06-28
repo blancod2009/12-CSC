@@ -51,9 +51,9 @@ def edit_task(number):
         new_data = request.forms.task.strip()
         status = request.forms.status.strip()
         if status == 'open':
-            status = 1
-        else:
             status = 0
+        else:
+            status = 1
         with sqlite3.connect('todo.db') as connection:
             cursor = connection.cursor()
             cursor.execute("UPDATE todo SET task = ?, status = ? WHERE id LIKE ?", (new_data, status, number))
