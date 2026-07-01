@@ -7,8 +7,9 @@ ABSOLUTE_APPLICATION_PATH = Path(__file__).parents[0]
 
 @app.route('/')
 def index():
-    return 'Hello from Lalith'
-    redirect('/todo')
+    return template('home.tpl')
+    
+    
 
 @app.get('/todo')
 def todo_list():
