@@ -2,7 +2,8 @@ from bottle import Bottle, template, request, static_file, redirect
 from pathlib import Path
 import sqlite3
 app = Bottle()
-ABSOLUTE_APPLICATION_PATH = Path(__file__).parents[0]
+ABSOLUTE_APPLICATION_PATH = Path(__file__).resolve().parents[0]
+DB_PATH = ABSOLUTE_APPLICATION_PATH / 'todo.db'
 
 
 @app.route('/')
@@ -48,24 +49,31 @@ def new_task():
 
 @app.route('/edit/<number:int>', method=['GET', 'POST'])
 def edit_task(number):
-    if request.POST:
-        new_data = request.forms.task.strip()
-        status = request.forms.status.strip()
-        if status == 'open':
-            status = 0
-        else:
-            status = 1
-        with sqlite3.connect('todo.db') as connection:
+    if request.method == 'POST':
+        new_data = request.forms.get('task', '').strip()
+        status_input = request.forms.get('status', '').strip()
+        
+        status = 0 if status_input.lower() in ('closed', '0', 'false') else 1
+        
+        with sqlite3.connect(DB_PATH) as connection:
             cursor = connection.cursor()
-            cursor.execute("UPDATE todo SET task = ?, status = ? WHERE id LIKE ?", (new_data, status, number))
+            cursor.execute("UPDATE todo SET task = ?, status = ? WHERE id = ?", (new_data, status, number))
+            
         return template('message.tpl',
             message=f'The task number {number} was successfully updated')
     else:
-        with sqlite3.connect('todo.db') as connection:
+        with sqlite3.connect(DB_PATH) as connection:
             cursor = connection.cursor()
-            cursor.execute("SELECT task FROM todo WHERE id LIKE ?", (number,))
+            cursor.execute("SELECT task, status FROM todo WHERE id = ?", (number,))
             current_data = cursor.fetchone()
-        return template('edit_task', current_data=current_data, number=number)
+            
+        if not current_data:
+            return template('message.tpl', message=f'The task number {number} does not exist!')
+            
+        return template('edit_task.tpl', current_data=current_data, number=number)
+
+    
+
 
 
 
