@@ -1,0 +1,31 @@
+body {
+    background-color: white;
+    color: black;
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+todo-container {
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #ffffff;
+    padding: 10px;
+}
+
+.header-section h2 {
+    color: black;
+    font-size: 24px;
+}
+
+.subtitle {
+    font-style: italic;
+    color: #333333;
+}
+
+.premium-table {
+    width: 100%;
+    border: 1px solid black;
+    margin-bottom: 10px;
+    border-collapse: collapse;
+}
