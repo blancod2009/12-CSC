@@ -1,36 +1,43 @@
 % rebase('base.tpl')
-%#template to generate a HTML table from a list of tuples (or list of lists, or tuple of tuples or ...)
-<p>The open items are as follows:</p>
 
-<table border="1">
-<tr>
-    <th>ID</th>
-    <th>Task</th>
-    <th>Status</th>
-    <th>TEST</th>
-<tr>
+<div class="container todo-container">
+    <div class="header-section">
+        <h2>Task Management</h2>
+        <p class="subtitle">Here is the current list of tasks from your database:</p>
+    </div>
 
+    <div class="table-responsive">
+        <table class="premium-table">
+            <thead>
+                <tr>
+                    <th class="col-id">ID</th>
+                    <th class="col-task">Task Description</th>
+                    <th class="col-status">Status</th>
+                    <th class="col-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                % for row in rows:
+                <tr>
+                    <td class="col-id">#{{row[0]}}</td>
+                    <td class="col-task">{{row[1]}}</td>
+                    <td class="col-status">
+                        % if int(row[2]) == 1:
+                            <span class="badge badge-open">Open</span>
+                        % else:
+                            <span class="badge badge-closed">Closed</span>
+                        % end
+                    </td>
+                    <td class="col-actions">
+                        <a href="/edit/{{row[0]}}" class="btn btn-sm btn-outline">Edit</a>
+                    </td>
+                </tr>
+                % end
+            </tbody>
+        </table>
+    </div>
 
-%for row in rows:
-  <tr>
-    <td>{{row[0]}}</td>
-    <td>{{row[1]}}</td>
-
-<td>
-    % if int(row[2]) == 1:
-      open
-    % else:
-      closed
-    % end
-  </td>
-
-  <td>
-  <p><a href="/edit/6">edit</a></p>
-  </td>
-  
-  %end
-  </tr>
-%end
-</table>
-
-<p><a href="/new">Add a new task</a></p>
+    <div class="actions-footer">
+        <a href="/new" class="btn btn-primary">+ Add a New Task</a>
+    </div>
+</div>

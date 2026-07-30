@@ -72,7 +72,15 @@ def edit_task(number):
             
         return template('edit_task.tpl', current_data=current_data, number=number)
 
-    
+
+@app.route('/delete/<number:int>')
+def delete_task(number):
+    with sqlite3.connect(DB_PATH) as connection:
+        cursor = connection.cursor()
+        cursor.execute("DELETE FROM todo WHERE id = ?", (number,))
+        
+    redirect('/todo')
+
 
 
 
