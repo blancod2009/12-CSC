@@ -2,18 +2,22 @@ from bottle import Bottle, template, request, static_file, redirect
 from pathlib import Path
 import sqlite3
 
+# Import the required libraries.
+
 app = Bottle()
 ABSOLUTE_APPLICATION_PATH = Path(__file__).resolve().parents[0]
 DB_PATH = ABSOLUTE_APPLICATION_PATH / 'todo.db'
-
+# Creates the Bottle app and sets database location.
 
 @app.route('/')
 def index():
+    # Shows the home page.
     return template('home.tpl')
 
 
 @app.get('/todo')
 def todo_list():
+    # Displays the task list based on the selected filter.
     show = request.query.show or 'open'
     
     match show:
@@ -37,6 +41,7 @@ def todo_list():
 
 @app.route('/new', method=['GET', 'POST'])
 def new_task():
+    # Adds new task to the database.
     if request.method == 'POST':
         new_task_text = request.forms.get('task', '').strip()
         if not new_task_text:
@@ -56,6 +61,9 @@ def new_task():
 
 @app.route('/edit/<number:int>', method=['GET', 'POST'])
 def edit_task(number):
+
+    # Allows user to edit existing tasks.
+
     if request.method == 'POST':
         new_data = request.forms.get('task', '').strip()
         status_input = request.forms.get('status', '').strip()
@@ -82,6 +90,7 @@ def edit_task(number):
 
 @app.route('/delete/<number:int>')
 def delete_task(number):
+    # Deletes selected task from database.
     with sqlite3.connect(DB_PATH) as connection:
         cursor = connection.cursor()
         cursor.execute("DELETE FROM todo WHERE id = ?", (number,))
@@ -91,6 +100,7 @@ def delete_task(number):
 
 @app.route('/details/<task:re:[0-9]+>')
 def show_item(task):
+     # Displays the details of a single task.
     with sqlite3.connect(DB_PATH) as connection:
         cursor = connection.cursor()
         cursor.execute("SELECT task, status FROM todo WHERE id = ?", (task,))
@@ -107,6 +117,9 @@ def show_item(task):
 
 @app.route('/as_json/<number:re:[0-9]+>')
 def task_as_json(number):
+
+    # Returns task as JSON data.
+
     with sqlite3.connect(DB_PATH) as connection:
         cursor = connection.cursor()
         cursor.execute("SELECT id, task, status FROM todo WHERE id = ?", (number,))
@@ -120,14 +133,17 @@ def task_as_json(number):
 
 @app.route('/static/<filepath:path>')
 def send_static_file(filepath):
+    # Serves CSS and other static files.
     ROOT_PATH = ABSOLUTE_APPLICATION_PATH / 'static'
     return static_file(filepath, root=ROOT_PATH)
 
 
 @app.error(404)
 def error_404(error):
+     # Custom error message for missing pages.
     return 'Sorry, this page does not exist!'
 
 
 if __name__ == '__main__':
+    # Starts website.
     app.run(host='127.0.0.1', port=8080, debug=True)
