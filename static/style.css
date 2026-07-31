@@ -5,7 +5,7 @@ body {
     margin: 20px;
 }
 
-todo-container {
+.todo-container {
     width: 600px;
     margin-left: auto;
     margin-right: auto;
@@ -28,4 +28,55 @@ todo-container {
     border: 1px solid black;
     margin-bottom: 10px;
     border-collapse: collapse;
+}
+
+.premium-table th {
+    background-color: #ffffff;
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.premium-table td {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.badge {
+    padding: 2px;
+}
+
+.badge-open {
+    color: black;
+    font-weight: bold;
+}
+
+.badge-closed {
+    color: black;
+    text-decoration: line-through;
+}
+
+.btn {
+    background-color: #ffffff;
+    color: black;
+    padding: 3px 6px;
+    text-decoration: underline;
+    border: 1px solid black;
+}
+
+.btn-primary {
+    background-color: #000000;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.btn-outline {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.actions-footer {
+    margin-top: 10px;
 }
