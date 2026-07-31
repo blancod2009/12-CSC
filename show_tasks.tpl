@@ -1,14 +1,20 @@
 % rebase('base.tpl')
 
 <div class="container todo-container">
+<!-- Main container for the task list. -->
+
     <div class="header-section">
         <h2>Task Management</h2>
         <p class="subtitle">Here is the current list of tasks from your database:</p>
     </div>
 
     <div class="table-responsive">
+    <!-- Displays the task table. -->
+
         <table class="premium-table">
             <thead>
+            <!-- Table headings. -->
+
                 <tr>
                     <th class="col-id">ID</th>
                     <th class="col-task">Task Description</th>
@@ -18,6 +24,8 @@
             </thead>
             <tbody>
                 % for row in rows:
+                <!-- Loops through each task in database. -->
+
                 <tr>
                     <td class="col-id">#{{row[0]}}</td>
                     <td class="col-task">{{row[1]}}</td>
@@ -30,6 +38,8 @@
                     </td>
                     <td class="col-actions">
                         <a href="/edit/{{row[0]}}" class="btn btn-sm btn-outline">Edit</a>
+                        <!-- Opens edit page for selected task. -->
+                        
                     </td>
                 </tr>
                 % end
@@ -39,5 +49,7 @@
 
     <div class="actions-footer">
         <a href="/new" class="btn btn-primary">+ Add a New Task</a>
+        <!-- Button to create a new task. -->
+        
     </div>
 </div>
