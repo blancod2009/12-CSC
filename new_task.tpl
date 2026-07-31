@@ -5,3 +5,5 @@
   <p><input type="text" size="100" maxlength="100" name="task"></p>
   <p><input type="submit" name="save" value="save"></p>
 </form>
+
+<p><a href="/todo">Home</a></p>
